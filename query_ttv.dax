@@ -1,0 +1,16 @@
+﻿/* START QUERY BUILDER */
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Período'[Ano],
+    'Período'[Mês],
+    Cliente[Tipo Operação],
+    Produto[Código Abreviado Produto],
+    Produto[Nome SKU],
+    KEEPFILTERS( FILTER( ALL( 'Período'[Ano] ), 'Período'[Ano] >= 2023 )),
+    KEEPFILTERS( TREATAS( {"CO"}, Cliente[Geo] )),
+    KEEPFILTERS( TREATAS( {"NAB"}, 'Cesta Produto'[Nome Cesta Abrev.] )),
+    "volume", ROUND(IF(SELECTEDVALUE(Cliente[Tipo Operação]) = "DIRETA", [1. Volume Sellin (hl) Real], [1. Volume (hl) Real]),2),
+    "caixas", ROUND(IF(SELECTEDVALUE(Cliente[Tipo Operação]) = "DIRETA", [1. Volume Sellin (hl) Real], [1. Volume (hl) Real])/SELECTEDVALUE(Produto[Fator HL]),0),
+    "unidades", ROUND((IF(SELECTEDVALUE(Cliente[Tipo Operação]) = "DIRETA", [1. Volume Sellin (hl) Real], [1. Volume (hl) Real])/SELECTEDVALUE(Produto[Fator HL]))*SELECTEDVALUE(Produto[Quantidade de Produtos por Unidade de Medida]),0),
+    "faturamento", ROUND(IF(SELECTEDVALUE(Cliente[Tipo Operação]) = "DIRETA", [Faturamento Sellin (R$)], [Faturamento (R$)]),2)
+)
