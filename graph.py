@@ -187,10 +187,11 @@ def make_graph_repasse(df: pd.DataFrame, h_chart, w_chart, h_pic, w_pic, canal):
     return alt.layer(chart, *texts, tick)
 
 
-# read_excel_parquets('data/repasse/graficos.xlsx', 'data/repasse')
-# depara_repasse = pl.read_parquet('data/repasse/depara_repasse.parquet').to_pandas()
-# depara_repasse['Caminho'] = depara_repasse['Caminho'].apply(convert_image)
-# depara_repasse.to_parquet('data/repasse/depara_repasse.parquet')
+#read_excel_parquets('data/repasse/graficos.xlsx', 'data/repasse')
+
+#depara_repasse = pl.read_parquet('data/repasse/depara_repasse.parquet').to_pandas()
+#depara_repasse['Caminho'] = depara_repasse['Caminho'].apply(convert_image)
+#depara_repasse.to_parquet('data/repasse/depara_repasse.parquet')
 
 repasse = pl.read_parquet("data/repasse/repasse.parquet")
 
@@ -200,7 +201,7 @@ repasse = repasse.join(depara_repasse, left_on="SKU", right_on="SKU")
 
 repasse.columns = [x.lower() for x in repasse.columns]
 
-title = "Out/25"
+title = "MAIO/26"
 
 st.set_page_config(
     page_title=f"PINC NAB - {title}",
@@ -226,8 +227,8 @@ with col1:
     uf = st.selectbox("UF", sorted(repasse["uf"].unique()), 0, key="uf")
 with col2:
     canal = st.selectbox("Canal", ["BAR", "ASR", "VAREJO", "ATACADO"], 0, key="canal")
-# with col3:
-# grupo_select = st.selectbox('Grupo', ['Single', 'Multi'], 0, key='grupo')
+#with col3:
+    #grupo_select = st.selectbox('Grupo', ['Single', 'Multi'], 0, key='grupo')
 
 comum = [
     "uf",
@@ -264,7 +265,7 @@ resumo_canais = resumo_canais[
 resumo_canais.columns = ["UF", "Geo", "SKU", "ROTA", "ASR", "VAREJO", "ATACADO"]
 
 repasse = repasse.filter(pl.col("uf") == st.session_state["uf"])
-# repasse = repasse.filter(pl.col('grupo').is_in(grupo_dict.get(grupo_select)))
+#repasse = repasse.filter(pl.col('grupo').is_in(grupo_dict.get(grupo_select)))
 repasse = repasse.select(comum + canais.get(st.session_state["canal"])).to_pandas()
 
 graphs = [
